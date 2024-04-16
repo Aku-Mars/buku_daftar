@@ -70,6 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 4px 2px;
             cursor: pointer;
         }
+
+        .lg {
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -79,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Tombol Logout -->
     <form method="post">
-        <input type="submit" name="logout" value="Logout" class="tombol">
+        <input type="submit" name="logout" value="Logout" class="lg tombol">
     </form>
 
     <!-- Form untuk tambah tamu -->

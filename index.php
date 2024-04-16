@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Fungsi untuk menambahkan tamu ke daftar hadir
 function tambahTamu($nama) {
     $tamu = array(
         'nama' => $nama,
@@ -11,22 +10,18 @@ function tambahTamu($nama) {
     $_SESSION['daftar_tamu'][] = $tamu;
 }
 
-// Fungsi untuk menandai tamu keluar
 function tandaiKeluar($index) {
     $_SESSION['daftar_tamu'][$index]['tanggal_keluar'] = date('Y-m-d H:i:s');
 }
 
-// Fungsi untuk menghapus tamu dari daftar
 function hapusTamu($index) {
     unset($_SESSION['daftar_tamu'][$index]);
 }
 
-// Inisialisasi daftar tamu jika belum ada
 if (!isset($_SESSION['daftar_tamu'])) {
     $_SESSION['daftar_tamu'] = array();
 }
 
-// Proses input dari form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['submit_masuk'])) {
         $nama = $_POST['nama'];
@@ -84,14 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <h2>Daftar Tamu</h2>
 
-    <!-- Form untuk memasukkan nama tamu -->
     <form method="post">
         <label for="nama">Nama Tamu:</label><br>
         <input type="text" id="nama" name="nama" required><br><br>
         <input type="submit" name="submit_masuk" value="Masuk" class="tombol">
     </form>
 
-    <!-- Tabel untuk menampilkan daftar tamu -->
     <table class="tabel">
         <thead>
             <tr>

@@ -43,9 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
         .container {
             text-align: center;
+            position: relative;
+            margin-top: 20px;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
         .tabel {
             border-collapse: collapse;
@@ -70,10 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 4px 2px;
             cursor: pointer;
         }
-
-        .lg {
-            text-align: left;
-        }
     </style>
 </head>
 <body>
@@ -82,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>Daftar Tamu</h2>
 
     <!-- Tombol Logout -->
-    <form method="post">
-        <input type="submit" name="logout" value="Logout" class="lg tombol">
+    <form method="post" class="logout-btn">
+        <input type="submit" name="logout" value="Logout" class="tombol">
     </form>
 
     <!-- Form untuk tambah tamu -->

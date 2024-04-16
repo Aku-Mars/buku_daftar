@@ -1,5 +1,20 @@
 <?php
+session_set_cookie_params(604800); // 604800 detik = 1 minggu
 session_start();
+
+// Data pengguna yang sah
+$users = array(
+    'username' => 'password'
+);
+
+function isUserAuthenticated() {
+    return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+}
+
+function authenticate($username, $password) {
+    global $users;
+    return isset($users[$username]) && $users[$username] === $password;
+}
 
 function tambahTamu($nama) {
     $tamu = array(
@@ -22,6 +37,31 @@ if (!isset($_SESSION['daftar_tamu'])) {
     $_SESSION['daftar_tamu'] = array();
 }
 
+// Login
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    if (authenticate($username, $password)) {
+        $_SESSION['logged_in'] = true;
+    } else {
+        $error = "Username atau password salah!";
+    }
+}
+
+// Logout
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+// Redirect jika belum login
+if (!isUserAuthenticated() && basename($_SERVER['PHP_SELF']) !== 'login.php') {
+    header("Location: login.php");
+    exit;
+}
+
+// Proses form tamu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['submit_masuk'])) {
         $nama = $_POST['nama'];
@@ -34,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         hapusTamu($index);
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -46,9 +85,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
         }
         .container {
             text-align: center;
+            position: relative;
+            margin-top: 20px;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
         .tabel {
             border-collapse: collapse;
@@ -80,12 +129,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <h2>Daftar Tamu</h2>
 
+    <!-- Tombol Logout -->
+    <form method="post" class="logout-btn">
+        <input type="submit" name="logout" value="Logout" class="tombol">
+    </form>
+
+    <!-- Form untuk tambah tamu -->
     <form method="post">
         <label for="nama">Nama Tamu:</label><br>
         <input type="text" id="nama" name="nama" required><br><br>
         <input type="submit" name="submit_masuk" value="Masuk" class="tombol">
     </form>
 
+    <!-- Tabel daftar tamu -->
     <table class="tabel">
         <thead>
             <tr>

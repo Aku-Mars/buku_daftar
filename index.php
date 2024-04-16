@@ -4,24 +4,59 @@ session_start();
 
 // Data pengguna yang sah
 $users = array(
-    'admin' => 'admin'
+    'username' => 'password'
 );
+
+function isUserAuthenticated() {
+    return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+}
 
 function authenticate($username, $password) {
     global $users;
     return isset($users[$username]) && $users[$username] === $password;
 }
 
+function tambahTamu($nama) {
+    $tamu = array(
+        'nama' => $nama,
+        'tanggal_masuk' => date('Y-m-d H:i:s'),
+        'tanggal_keluar' => null
+    );
+    $_SESSION['daftar_tamu'][] = $tamu;
+}
+
+function tandaiKeluar($index) {
+    $_SESSION['daftar_tamu'][$index]['tanggal_keluar'] = date('Y-m-d H:i:s');
+}
+
+function hapusTamu($index) {
+    unset($_SESSION['daftar_tamu'][$index]);
+}
+
+if (!isset($_SESSION['daftar_tamu'])) {
+    $_SESSION['daftar_tamu'] = array();
+}
+
+// Login
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    if (authenticate($username, $password)) {
+        $_SESSION['logged_in'] = true;
+    } else {
+        $error = "Username atau password salah!";
+    }
+}
+
 // Logout
 if (isset($_POST['logout'])) {
-    session_unset();
     session_destroy();
     header("Location: login.php");
     exit;
 }
 
 // Redirect jika belum login
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+if (!isUserAuthenticated() && basename($_SERVER['PHP_SELF']) !== 'login.php') {
     header("Location: login.php");
     exit;
 }

@@ -28,9 +28,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 // Proses form tamu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Tambahkan kode untuk menangani form tamu jika diperlukan
+    if (isset($_POST['submit_masuk'])) {
+        $nama = $_POST['nama'];
+        tambahTamu($nama);
+    } elseif (isset($_POST['submit_keluar'])) {
+        $index = $_POST['index'];
+        tandaiKeluar($index);
+    } elseif (isset($_POST['submit_hapus'])) {
+        $index = $_POST['index'];
+        hapusTamu($index);
+    }
 }
-
 ?>
 
 <!DOCTYPE html>

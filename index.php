@@ -4,76 +4,33 @@ session_start();
 
 // Data pengguna yang sah
 $users = array(
-    'username' => 'password'
+    'admin' => 'admin'
 );
-
-function isUserAuthenticated() {
-    return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-}
 
 function authenticate($username, $password) {
     global $users;
     return isset($users[$username]) && $users[$username] === $password;
 }
 
-function tambahTamu($nama) {
-    $tamu = array(
-        'nama' => $nama,
-        'tanggal_masuk' => date('Y-m-d H:i:s'),
-        'tanggal_keluar' => null
-    );
-    $_SESSION['daftar_tamu'][] = $tamu;
-}
-
-function tandaiKeluar($index) {
-    $_SESSION['daftar_tamu'][$index]['tanggal_keluar'] = date('Y-m-d H:i:s');
-}
-
-function hapusTamu($index) {
-    unset($_SESSION['daftar_tamu'][$index]);
-}
-
-if (!isset($_SESSION['daftar_tamu'])) {
-    $_SESSION['daftar_tamu'] = array();
-}
-
-// Login
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    if (authenticate($username, $password)) {
-        $_SESSION['logged_in'] = true;
-    } else {
-        $error = "Username atau password salah!";
-    }
-}
-
 // Logout
 if (isset($_POST['logout'])) {
+    session_unset();
     session_destroy();
     header("Location: login.php");
     exit;
 }
 
 // Redirect jika belum login
-if (!isUserAuthenticated() && basename($_SERVER['PHP_SELF']) !== 'login.php') {
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit;
 }
 
 // Proses form tamu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['submit_masuk'])) {
-        $nama = $_POST['nama'];
-        tambahTamu($nama);
-    } elseif (isset($_POST['submit_keluar'])) {
-        $index = $_POST['index'];
-        tandaiKeluar($index);
-    } elseif (isset($_POST['submit_hapus'])) {
-        $index = $_POST['index'];
-        hapusTamu($index);
-    }
+    // Tambahkan kode untuk menangani form tamu jika diperlukan
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
         }
         .container {
             text-align: center;
@@ -119,15 +77,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <h2>Daftar Tamu</h2>
 
+    <!-- Tombol Logout -->
+    <form method="post">
+        <input type="submit" name="logout" value="Logout" class="tombol">
+    </form>
+
+    <!-- Form untuk tambah tamu -->
     <form method="post">
         <label for="nama">Nama Tamu:</label><br>
         <input type="text" id="nama" name="nama" required><br><br>
         <input type="submit" name="submit_masuk" value="Masuk" class="tombol">
     </form>
 
+    <!-- Tabel daftar tamu -->
     <table class="tabel">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Nama Tamu</th>
                 <th>Tanggal Masuk</th>
                 <th>Tanggal Keluar</th>
@@ -137,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <tbody>
             <?php foreach ($_SESSION['daftar_tamu'] as $index => $tamu): ?>
                 <tr>
+                    <td><?php echo $index + 1; ?></td>
                     <td><?php echo $tamu['nama']; ?></td>
                     <td><?php echo $tamu['tanggal_masuk']; ?></td>
                     <td><?php echo $tamu['tanggal_keluar'] ?? 'Belum keluar'; ?></td>

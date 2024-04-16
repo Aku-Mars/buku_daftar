@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Data pengguna yang sah
 $users = array(
     'admin' => 'admin'
 );
@@ -11,20 +10,18 @@ function authenticate($username, $password) {
     return isset($users[$username]) && $users[$username] === $password;
 }
 
-// Login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     if (authenticate($username, $password)) {
         $_SESSION['logged_in'] = true;
-        header("Location: index.php"); // Redirect ke halaman tamu setelah login berhasil
+        header("Location: index.php");
         exit;
     } else {
         $error = "Username atau password salah!";
     }
 }
 
-// Redirect jika sudah login
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     header("Location: index.php");
     exit;

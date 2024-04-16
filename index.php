@@ -1,19 +1,9 @@
 <?php
-session_set_cookie_params(604800); // 604800 detik = 1 minggu
+session_set_cookie_params(604800); 
 session_start();
-
-// Data pengguna yang sah
-$users = array(
-    'username' => 'password'
-);
 
 function isUserAuthenticated() {
     return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-}
-
-function authenticate($username, $password) {
-    global $users;
-    return isset($users[$username]) && $users[$username] === $password;
 }
 
 function tambahTamu($nama) {
@@ -35,17 +25,6 @@ function hapusTamu($index) {
 
 if (!isset($_SESSION['daftar_tamu'])) {
     $_SESSION['daftar_tamu'] = array();
-}
-
-// Login
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    if (authenticate($username, $password)) {
-        $_SESSION['logged_in'] = true;
-    } else {
-        $error = "Username atau password salah!";
-    }
 }
 
 // Logout
@@ -97,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .logout-btn {
             position: absolute;
             top: 10px;
-            left: 10px;
+            left: 20px;
         }
         .tabel {
             border-collapse: collapse;

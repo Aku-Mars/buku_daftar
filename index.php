@@ -1,4 +1,5 @@
 <?php
+session_set_cookie_params(604800); // 604800 detik = 1 minggu
 session_start();
 
 // Data pengguna yang sah

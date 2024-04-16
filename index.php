@@ -1,6 +1,20 @@
 <?php
 session_start();
 
+// Data pengguna yang sah
+$users = array(
+    'username' => 'password'
+);
+
+function isUserAuthenticated() {
+    return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+}
+
+function authenticate($username, $password) {
+    global $users;
+    return isset($users[$username]) && $users[$username] === $password;
+}
+
 function tambahTamu($nama) {
     $tamu = array(
         'nama' => $nama,
@@ -22,6 +36,31 @@ if (!isset($_SESSION['daftar_tamu'])) {
     $_SESSION['daftar_tamu'] = array();
 }
 
+// Login
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    if (authenticate($username, $password)) {
+        $_SESSION['logged_in'] = true;
+    } else {
+        $error = "Username atau password salah!";
+    }
+}
+
+// Logout
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+// Redirect jika belum login
+if (!isUserAuthenticated() && basename($_SERVER['PHP_SELF']) !== 'login.php') {
+    header("Location: login.php");
+    exit;
+}
+
+// Proses form tamu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['submit_masuk'])) {
         $nama = $_POST['nama'];
@@ -34,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         hapusTamu($index);
     }
 }
-
 ?>
 
 <!DOCTYPE html>

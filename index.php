@@ -89,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <table class="tabel">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Nama Tamu</th>
                 <th>Tanggal Masuk</th>
                 <th>Tanggal Keluar</th>
@@ -98,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <tbody>
             <?php foreach ($_SESSION['daftar_tamu'] as $index => $tamu): ?>
                 <tr>
+                    <td><?php echo $index + 1; ?></td>
                     <td><?php echo $tamu['nama']; ?></td>
                     <td><?php echo $tamu['tanggal_masuk']; ?></td>
                     <td><?php echo $tamu['tanggal_keluar'] ?? 'Belum keluar'; ?></td>

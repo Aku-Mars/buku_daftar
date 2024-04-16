@@ -57,12 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .tabel th, .tabel td {
             border: 1px solid #dddddd;
-            text-align: left;
+            text-align: center;
             padding: 8px;
         }
         .tombol {
             background-color: #4CAF50;
-            border: none;
+            border: 0.5px;
+            border-radius: 15px; 
             color: white;
             padding: 10px 20px;
             text-align: center;

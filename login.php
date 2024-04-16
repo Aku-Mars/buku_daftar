@@ -3,12 +3,20 @@ session_start();
 
 // Data pengguna yang sah
 $users = array(
-    'username' => 'password'
+    'admin' => 'admin'
 );
 
 function authenticate($username, $password) {
     global $users;
     return isset($users[$username]) && $users[$username] === $password;
+}
+
+// Logout
+if (isset($_POST['logout'])) {
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit;
 }
 
 // Login
